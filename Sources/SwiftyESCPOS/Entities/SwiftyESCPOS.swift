@@ -1,6 +1,8 @@
+import CocoaAsyncSocket
+
 public struct SwiftyESCPOS {
     
-    public private(set) var text = "default"
+    private var text = "default"
 
     public init() {
     }
