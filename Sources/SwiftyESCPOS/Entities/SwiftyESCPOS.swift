@@ -23,13 +23,13 @@ public final class SwiftyESCPOS: NSObject {
     
     // MARK: - Public methods
     
-    func create(new printer: PrinterConnectionModel) {
+    public func create(new printer: PrinterConnectionModel) {
         printersModels.append(printer)
         printerManagedObjects.insert(Printer(with: printer, configuration: .defaultConfiguration, language: .russian))
         updateListAndNotifyDelegate()
     }
     
-    func create(new printers: [PrinterConnectionModel]) {
+    public func create(new printers: [PrinterConnectionModel]) {
         for printer in printers {
             printersModels.append(printer)
             printerManagedObjects.insert(Printer(with: printer, configuration: .defaultConfiguration, language: .russian))
@@ -38,7 +38,7 @@ public final class SwiftyESCPOS: NSObject {
         updateListAndNotifyDelegate()
     }
     
-    func delete(with selection: PrinterSelection) {
+    public func delete(with selection: PrinterSelection) {
         switch selection {
         case .all:
             printersModels.removeAll()
@@ -61,7 +61,7 @@ public final class SwiftyESCPOS: NSObject {
         }
     }
     
-    func connect(with selection: PrinterSelection) {
+    public func connect(with selection: PrinterSelection) {
         switch selection {
         case .all:
             selectAllPrinters { $0?.connect() }
@@ -70,7 +70,7 @@ public final class SwiftyESCPOS: NSObject {
         }
     }
     
-    func disconnect(with selection: PrinterSelection) {
+    public func disconnect(with selection: PrinterSelection) {
         switch selection {
         case .all:
             selectAllPrinters { $0?.disconnect() }
@@ -79,7 +79,7 @@ public final class SwiftyESCPOS: NSObject {
         }
     }
     
-    func printData(with selection: PrinterSelection, from data: Data) {
+    public func printData(with selection: PrinterSelection, from data: Data) {
         switch selection {
         case .all:
             selectAllPrinters { printer in
@@ -92,7 +92,7 @@ public final class SwiftyESCPOS: NSObject {
         }
     }
     
-    func printCheck(with selection: PrinterSelection, from data: Data) {
+    public func printCheck(with selection: PrinterSelection, from data: Data) {
         do {
             let model = try JSONDecoder().decode(CheckModel.self, from: data)
             switch selection {
