@@ -2,8 +2,7 @@ import Foundation
 
 // MARK: - Reciept for printing
 
-final class RecieptManager: NSObject {
-    
+final class Reciept: NSObject {
     
     private let bytes = NSMutableData()
     

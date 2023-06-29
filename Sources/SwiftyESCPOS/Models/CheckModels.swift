@@ -82,6 +82,40 @@ struct TableBody: Decodable {
     let sum: Double
 }
 
+// MARK: - Check boody (products) aligment
+
+enum TableBodyLimits: Int {
+    case name = 24
+    case count = 6
+    case sum = 9
+}
+
+// MARK: -
+
+extension TableBody {
+    func limitedString(_ property: TableBodyLimits) -> String {
+        switch property {
+        case .name:
+            let cut = name.prefix(property.rawValue)
+            return paddedWithLimit(cut, property.rawValue)
+        case .count:
+            let cut = String(count).prefix(property.rawValue)
+            return paddedWithLimit(cut, property.rawValue)
+        case .sum:
+            let formattedString = String(format: "%.2f", sum)
+            let finalString = formattedString.hasSuffix(".00") ? formattedString : formattedString + ".00"
+            let cut = finalString.prefix(property.rawValue)
+            return paddedWithLimit(cut, property.rawValue)
+        }
+    }
+    
+    private func paddedWithLimit(_ string: String.SubSequence, _ limit: Int) -> String {
+        let tailCount = limit - string.count
+        let paddedString = string + String(repeating: " ", count: max(0, tailCount))
+        return String(paddedString)
+    }
+}
+
 // MARK: - TableFooter
 
 struct TableFooter: Decodable {
