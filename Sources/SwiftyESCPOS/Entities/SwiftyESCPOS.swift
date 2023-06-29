@@ -24,9 +24,11 @@ public final class SwiftyESCPOS: NSObject {
     // MARK: - Public methods
     
     public func create(new printer: PrinterConnectionModel) {
-        printersModels.append(printer)
-        printerManagedObjects.insert(Printer(with: printer, configuration: .defaultConfiguration, language: .russian))
-        updateListAndNotifyDelegate()
+        uniqueConnection(printer) { [weak self] isUnique in
+            self?.printersModels.append(printer)
+            self?.printerManagedObjects.insert(Printer(with: printer, configuration: .defaultConfiguration, language: .russian))
+            self?.updateListAndNotifyDelegate()
+        }
     }
     
     public func create(new printers: [PrinterConnectionModel]) {
@@ -107,6 +109,16 @@ public final class SwiftyESCPOS: NSObject {
             }
         } catch let error {
             print(error.localizedDescription)
+        }
+    }
+    
+    // MARK: - Check if the same connection already exist
+    
+    private func uniqueConnection(_ connectionModel: PrinterConnectionModel, _ completion: @escaping (Bool) -> Void) {
+        DispatchQueue.main.async { [weak self] in
+            guard let pointer = self else { completion(false); return }
+            let flag = pointer.printersModels.contains(where: { (connectionModel.host == $0.host) && (connectionModel.port == $0.port) })
+            completion(!flag)
         }
     }
     
