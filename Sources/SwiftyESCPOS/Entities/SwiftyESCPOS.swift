@@ -2,7 +2,7 @@ import CocoaAsyncSocket
 
 // MARK: - Printer delegate
 
-protocol BasePrinterDelegate: AnyObject {
+public protocol BasePrinterDelegate: AnyObject {
     func connecting()
     func connected()
     func disconnected()
@@ -12,14 +12,14 @@ protocol BasePrinterDelegate: AnyObject {
 
 public final class SwiftyESCPOS: NSObject {
     
-    weak var delegate: BasePrinterDelegate?
+    public weak var delegate: BasePrinterDelegate?
     private let reciept = RecieptManager()
     private var buffer: [UUID: ConnectionModel] = [:]
     private var model = ConnectionModel(host: "", port: 9100)
 
     public override init() {}
     
-    func defaultSetups() {
+    public func defaultSetups() {
         reciept.printInitialize()
         reciept.printSetStanderModel()
         reciept.printDotDistance(w: 0.1, h: 0.1)
@@ -30,15 +30,15 @@ public final class SwiftyESCPOS: NSObject {
         reciept.printerSetMaximumWidth(n: 90)
     }
     
-    func refresh() {
+    public func refresh() {
         reciept.refreshReciept()
     }
     
-    func setupRussianCompatibility() {
+    public func setupRussianCompatibility() {
         reciept.printSetupRussianCompatibility()
     }
     
-    func writeBoldModeManual(_ value: Bool) {
+    public func writeBoldModeManual(_ value: Bool) {
         reciept.printBoldCharModel(model: value ? 1 : 0)
     }
     
@@ -55,7 +55,7 @@ public final class SwiftyESCPOS: NSObject {
         reciept.printBoldCharModel(model: 0)
     }
    
-    func writeData_item(items: [String]) {
+    public func writeData_item(items: [String]) {
         reciept.printCharSize(scale: kCharScale.scale_1)
         reciept.printAlignmentType(type: .LeftAlignment)
        
@@ -65,7 +65,7 @@ public final class SwiftyESCPOS: NSObject {
         }
     }
     
-    func writeData_bold_item(_ item: String) {
+    public func writeData_bold_item(_ item: String) {
         reciept.printCharSize(scale: kCharScale.scale_1)
         reciept.printAlignmentType(type: .LeftAlignment)
         reciept.printBoldCharModel(model: 1)
@@ -74,29 +74,29 @@ public final class SwiftyESCPOS: NSObject {
         reciept.printBoldCharModel(model: 0)
     }
     
-    func printReceipt() -> NSData {
+    public func printReceipt() -> NSData {
         reciept.printCutPaper(model: kCutPaperModel.feedPaperHalfCut, n: 10)
         return reciept.getLatestData()
     }
     
-    func checkPaper() {
+    public func checkPaper() {
         reciept.printShortOfPaper()
     }
     
-    func openCashDrawer() {
+    public func openCashDrawer() {
         reciept.printOpenCashDrawer()
     }
     
-    func writeData_line() {
+    public func writeData_line() {
         reciept.printAddTextRU(text: "-----------------------------------------")
         reciept.printAndGotoNextLine()
     }
     
-    func writeCenterLine() {
+    public func writeCenterLine() {
         writeData_Title(title: "----------------------------------------", scale: .scale_1)
     }
     
-    func writeData_insert(_ text: String, bold: Bool, nextLine: Bool) {
+    public func writeData_insert(_ text: String, bold: Bool, nextLine: Bool) {
         reciept.printBoldCharModel(model: bold ? 1 : 0)
         reciept.printCharSize(scale: kCharScale.scale_1)
         reciept.printAddTextRU(text: text)
@@ -123,36 +123,36 @@ public final class SwiftyESCPOS: NSObject {
     
     // TODO: - Add protocols
     
-    func configureHost(_ string: String) {
+    public func configureHost(_ string: String) {
         model.host = string
     }
     
-    func configurePort(_ string: String) {
+    public func configurePort(_ string: String) {
         if let port = UInt16(string) {
             model.port = port
         }
     }
     
-    func estabilishConnection() {
+    public func estabilishConnection() {
         delegate?.connecting()
         connectToSocket()
     }
     
-    func interruptAnyConnections() {
+    public func interruptAnyConnections() {
         disconnectSocket()
     }
     
-    func writeString(_ string: String) {
+    public func writeString(_ string: String) {
         writeData_line()
         writeData_item(items: [string])
         writeData_line()
     }
     
-    func sendDataToPrinter() {
+    public func sendDataToPrinter() {
         sendToSocket(printReceipt())
     }
     
-    func printCheckFromData(_ data: Data) -> Bool {
+    public func printCheckFromData(_ data: Data) -> Bool {
         guard let checkModel = decodeFromData(data: data) else { return false }
         printCheck(checkModel)
         return true
@@ -391,7 +391,7 @@ extension SwiftyESCPOS: GCDAsyncSocketDelegate {
 // MARK: - Example of decoding check data
 
 extension SwiftyESCPOS {
-    func decodeFromData(data: Data) -> CheckModel? {
+    private func decodeFromData(data: Data) -> CheckModel? {
         do {
             let model = try JSONDecoder().decode(CheckModel.self, from: data)
             return model
