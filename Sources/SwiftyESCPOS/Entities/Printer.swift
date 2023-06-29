@@ -50,11 +50,9 @@ final class Printer: NSObject {
     // MARK: - Socket methods
     
     func connect() {
-        guard socket.isDisconnected, let port = UInt16(model.port) else {
-            print("* ALREADY CONNECTED - STOP CONNECTING [\(model.host):\(model.port)]")
-            delegate?.connected(from: self)
-            return
-        }
+        guard model.state == .disconnected, let port = UInt16(model.port) else { return }
+        
+        model.state = .connecting
         
         do {
             try socket.connect(toHost: model.host, onPort: port, withTimeout: -1)
@@ -88,14 +86,15 @@ final class Printer: NSObject {
 extension Printer: GCDAsyncSocketDelegate {
     func socket(_ sock: GCDAsyncSocket, didConnectToHost host: String, port: UInt16) {
         print("* CONNECTED TO [\(host) - \(port)]")
+        model.state = .connected
         delegate?.connected(from: self)
        
     }
     
     func socketDidDisconnect(_ sock: GCDAsyncSocket, withError err: Error?) {
         print("* DISCONNECTED TO [\(sock.description) - \(err?.localizedDescription ?? "no error")]")
+        model.state = .disconnected
         delegate?.disconnected(from: self)
-        connect()
     }
 }
 
