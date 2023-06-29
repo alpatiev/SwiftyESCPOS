@@ -95,6 +95,7 @@ extension Printer: GCDAsyncSocketDelegate {
         print("* DISCONNECTED TO [\(sock.description) - \(err?.localizedDescription ?? "no error")]")
         model.state = .disconnected
         delegate?.disconnected(from: self)
+        connect()
     }
 }
 
