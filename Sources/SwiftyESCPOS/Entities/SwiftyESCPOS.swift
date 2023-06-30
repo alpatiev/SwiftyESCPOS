@@ -26,8 +26,10 @@ public final class SwiftyESCPOS: NSObject {
     public func create(new printer: PrinterConnectionModel) {
         uniqueConnection(printer) { [weak self] isUnique in
             if isUnique {
+                let printerObject = Printer(with: printer, configuration: .defaultConfiguration, language: .russian)
+                printerObject.delegate = self
                 self?.printersModels.append(printer)
-                self?.printerManagedObjects.insert(Printer(with: printer, configuration: .defaultConfiguration, language: .russian))
+                self?.printerManagedObjects.insert(printerObject)
                 self?.updateListAndNotifyDelegate()
             }
         }
@@ -35,8 +37,10 @@ public final class SwiftyESCPOS: NSObject {
     
     public func create(new printers: [PrinterConnectionModel]) {
         for printer in printers {
+            let printerObject = Printer(with: printer, configuration: .defaultConfiguration, language: .russian)
+            printerObject.delegate = self
             printersModels.append(printer)
-            printerManagedObjects.insert(Printer(with: printer, configuration: .defaultConfiguration, language: .russian))
+            printerManagedObjects.insert(printerObject)
         }
         
         updateListAndNotifyDelegate()
