@@ -17,6 +17,8 @@ final class Printer: NSObject {
     weak var delegate: PrinterDelegate?
     var model: PrinterConnectionModel
     private let reciept = Reciept()
+    private var configuration: PrinterConfiguration
+    private var language: PrinterLanguage
     private var shouldEstabilishConnection = false
     private lazy var socket: GCDAsyncSocket = {
         let socket = GCDAsyncSocket()
@@ -29,23 +31,8 @@ final class Printer: NSObject {
     
     init(with model: PrinterConnectionModel, configuration: PrinterConfiguration, language: PrinterLanguage) {
         self.model = model
-        
-        switch configuration {
-        case .defaultConfiguration:
-            reciept.printInitialize()
-            reciept.printSetStanderModel()
-            reciept.printDotDistance(w: 0.1, h: 0.1)
-            reciept.printLeftMargin(nL: 20, nH: 0)
-            reciept.printDefaultLineSpace()
-            reciept.printAreaWidth(width: 80)
-            reciept.printSelectFont(font: UInt8(48))
-            reciept.printerSetMaximumWidth(n: 90)
-        }
-        
-        switch language {
-        case .russian:
-            reciept.printSetupRussianCompatibility()
-        }
+        self.configuration = configuration
+        self.language = language
     }
     
     // MARK: - Socket methods
@@ -73,6 +60,8 @@ final class Printer: NSObject {
     }
     
     func sendToPrinter(_ model: CheckModel) {
+        recieptInitializePrinting()
+        recieptSetRussainCompatibility()
         recieptPrepareHeader(model)
         recieptPrepareBody(model)
         recieptPrepareProducts(model)
@@ -82,11 +71,37 @@ final class Printer: NSObject {
         socket.write(reciept.getLatestData() as Data, withTimeout: -1, tag: 0)
         reciept.refreshReciept()
     }
+    
+    // MARK: - Initialize and configure
+    
+    private func recieptInitializePrinting() {
+        switch configuration {
+        case .defaultConfiguration:
+            reciept.printInitialize()
+            reciept.printSetStanderModel()
+            reciept.printDotDistance(w: 0.1, h: 0.1)
+            reciept.printLeftMargin(nL: 20, nH: 0)
+            reciept.printDefaultLineSpace()
+            reciept.printAreaWidth(width: 80)
+            reciept.printSelectFont(font: UInt8(48))
+            reciept.printerSetMaximumWidth(n: 90)
+        }
+    }
+    
+    private func recieptSetRussainCompatibility() {
+        switch language {
+        case .russian:
+            reciept.printSetupRussianCompatibility()
+        }
+    }
 }
 
 // MARK: - GCDAsyncSocketDelegate methods
 
 extension Printer: GCDAsyncSocketDelegate {
+    func socket(_ sock: GCDAsyncSocket, didWriteDataWithTag tag: Int) {
+        print("* SEND DATA TO \(model.host) : \(model.host)")
+    }
     func socket(_ sock: GCDAsyncSocket, didConnectToHost host: String, port: UInt16) {
         print("* CONNECTED TO [\(host) - \(port)]")
         model.state = .connected
