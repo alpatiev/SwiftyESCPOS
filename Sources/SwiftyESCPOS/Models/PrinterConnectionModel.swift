@@ -5,12 +5,14 @@ import Foundation
 public struct PrinterConnectionModel: Hashable {
     public let id = UUID()
     public let host: String
-    public let port: String 
+    public let port: String
+    public var name: String
     public var state: ConnectionState
     
     public init(host: String, port: String) {
         self.host = host
         self.port = port
+        self.name = ""
         self.state = .disconnected
     }
 }
