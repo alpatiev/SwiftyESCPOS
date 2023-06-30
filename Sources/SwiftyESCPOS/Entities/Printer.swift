@@ -100,7 +100,11 @@ extension Printer: GCDAsyncSocketDelegate {
         delegate?.disconnected(from: self)
         
         if shouldEstabilishConnection {
-            connect()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+                if self?.shouldEstabilishConnection == true {
+                    self?.connect()
+                }
+            }
         }
     }
 }
