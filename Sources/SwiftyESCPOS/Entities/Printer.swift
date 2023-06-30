@@ -17,6 +17,7 @@ final class Printer: NSObject {
     weak var delegate: PrinterDelegate?
     var model: PrinterConnectionModel
     private let reciept = Reciept()
+    private var shouldEstabilishConnection = false
     private lazy var socket: GCDAsyncSocket = {
         let socket = GCDAsyncSocket()
         socket.delegateQueue = .main
@@ -55,6 +56,7 @@ final class Printer: NSObject {
         model.state = .connecting
         
         do {
+            shouldEstabilishConnection = true
             try socket.connect(toHost: model.host, onPort: port, withTimeout: -1)
         } catch let error {
             print("* CONNECTION ERROR - \(error.localizedDescription)")
@@ -62,6 +64,7 @@ final class Printer: NSObject {
     }
     
     func disconnect() {
+        shouldEstabilishConnection = false
         socket.disconnect()
     }
     
@@ -95,7 +98,10 @@ extension Printer: GCDAsyncSocketDelegate {
         print("* DISCONNECTED TO [\(sock.description) - \(err?.localizedDescription ?? "no error")]")
         model.state = .disconnected
         delegate?.disconnected(from: self)
-        connect()
+        
+        if shouldEstabilishConnection {
+            connect()
+        }
     }
 }
 
