@@ -116,28 +116,36 @@ private extension Printer {
     // MARK: - Create sequence of bytes which prints check divided by areas
     
     func recieptPrepareHeader(_ model: CheckModel) {
-        let cutHeaderName = String(model.data.header.title.prefix(40))
-        writeData_Title(title: "", scale: .scale_1, bold: true)
-        writeData_Title(title: cutHeaderName, scale: .scale_1, bold: true)
-        
-        for line in model.data.header.subtitle {
-            for subline in splitSubtitleIntoWords(line, limit: 40) {
-                writeData_Title(title: subline, scale: .scale_1, bold: true)
+        if let existedTitle = model.data?.header?.title {
+            let cutHeaderName = String(existedTitle.prefix(40))
+            writeData_Title(title: "", scale: .scale_1, bold: true)
+            writeData_Title(title: cutHeaderName, scale: .scale_1, bold: true)
+        }
+      
+        if let existedSubtitles = model.data?.header?.subtitle {
+            for line in existedSubtitles {
+                for subline in splitSubtitleIntoWords(line, limit: 40) {
+                    writeData_Title(title: subline, scale: .scale_1, bold: true)
+                }
             }
         }
-        
+       
         writeData_insert(" ", bold: false, nextLine: true)
     }
     
     func recieptPrepareBody(_ model: CheckModel) {
         writeData_item(items: [])
         
-        for element in model.data.body {
-            let title = element.title.padPrefix(20)
-            let value = element.value.stringValue.padPrefix(18)
-            
-            writeData_insert(title, bold: false, nextLine: false)
-            writeData_insert(value, bold: false, nextLine: true)
+        if let existedBody = model.data?.body {
+            for element in existedBody {
+                if let existedTitle = element.title, let existedValue = element.value?.stringValue {
+                    let title = existedTitle.padPrefix(20)
+                    let value = existedValue.padPrefix(18)
+                    
+                    writeData_insert(title, bold: false, nextLine: false)
+                    writeData_insert(value, bold: false, nextLine: true)
+                }
+            }
         }
     }
     
@@ -149,12 +157,15 @@ private extension Printer {
         let title = "Наименование".pad(.name) + " " + "Кол-во".pad(.count) + " " + "Сумма".pad(.sum)
         var lines = [String]()
         
-        for element in model.data.tableBody {
-            let name = element.limitedString(.name)
-            let count = Printer.centeredSixDigitsFrom(element.count)
-            let sum = element.limitedString(.sum)
-            lines.append("\(name) \(count) \(sum)")
+        if let existedTableBody = model.data?.tableBody {
+            for element in existedTableBody {
+                let name = element.limitedString(.name)
+                let count = Printer.centeredSixDigitsFrom(element.count ?? 0)
+                let sum = element.limitedString(.sum)
+                lines.append("\(name) \(count) \(sum)")
+            }
         }
+       
         
         writeData_bold_item(title)
         writeData_item(items: lines)
@@ -167,8 +178,9 @@ private extension Printer {
     func recieptPrepareBottom(_ model: CheckModel) {
         let shift: Int = 20
         
+        guard let totalValue = model.data?.tableFooter?.total else { return }
         let toPayName = "К оплате".padPrefix(shift)
-        let toPayValue =  model.data.tableFooter.total.padPrefix(shift).replacingOccurrences(of: "₽", with: "Р")
+        let toPayValue = totalValue.padPrefix(shift).replacingOccurrences(of: "₽", with: "Р")
         let toPay = toPayName + toPayValue
         writeData_insert(toPay, bold: true, nextLine: true)
     }
@@ -176,8 +188,10 @@ private extension Printer {
     func recieptPrepareAdditional(_ model: CheckModel) {
         writeData_item(items: [""])
         
-        for footerItem in model.data.footer {
-            writeData_Title(title: footerItem, scale: .scale_1, bold: true)
+        if let existedFooter = model.data?.footer {
+            for footerItem in existedFooter {
+                writeData_Title(title: footerItem, scale: .scale_1, bold: true)
+            }
         }
     }
     

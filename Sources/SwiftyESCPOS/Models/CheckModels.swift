@@ -3,37 +3,46 @@ import Foundation
 // MARK: - CheckModel
 
 struct CheckModel: Decodable {
-    let success: Bool
-    let data: DataClass
-    let checkoutShift: CheckoutShift
+    let success: Bool?
+    let data: DataClass?
+    let checkoutShift: CheckoutShift?
 }
 
 // MARK: - CheckoutShift
 
 struct CheckoutShift: Decodable {
-    let status: Int
-    let statusBool: Bool
-    let idcheckoutshift, checkoutShiftNumber: Int
-    let checkoutShiftOpen: String
-    let subdivisionsWithScheme: Int
-    let subdivisionsWithSchemeBool: Bool
+    let status: Int?
+    let statusBool: Bool?
+    let idcheckoutshift: Int?
+    let checkoutShiftNumber: Int?
+    let checkoutShiftOpen: String?
+    let subdivisionsWithScheme: Int?
+    let subdivisionsWithSchemeBool: Bool?
 }
 
 // MARK: - DataClass
 
 struct DataClass: Decodable {
-    let header: Header
-    let body: [Body]
-    let tableBody: [TableBody]
-    let tableFooter: TableFooter
-    let footer: [String]
+    let header: Header?
+    let body: [Body]?
+    let tableBody: [TableBody]?
+    let tableFooter: TableFooter?
+    let footer: [String]?
+}
+
+// MARK: - Decodable
+
+struct Header: Decodable {
+    let logo: String?
+    let title: String?
+    let subtitle: [String]?
 }
 
 // MARK: - Body
 
 struct Body: Decodable {
-    let title: String
-    let value: Value
+    let title: String?
+    let value: Value?
 }
 
 enum Value: Decodable {
@@ -65,20 +74,12 @@ enum Value: Decodable {
     }
 }
 
-// MARK: - Decodable
-
-struct Header: Codable {
-    let logo: String
-    let title: String
-    let subtitle: [String]
-}
-
 // MARK: - TableBody
 
 struct TableBody: Decodable {
-    let name: String
-    let count: Int
-    let sum: Double
+    let name: String?
+    let count: Int?
+    let sum: Double?
 }
 
 // MARK: - Check boody (products) aligment
@@ -95,17 +96,24 @@ extension TableBody {
     func limitedString(_ property: TableBodyLimits) -> String {
         switch property {
         case .name:
-            let cut = name.prefix(property.rawValue)
-            return paddedWithLimit(cut, property.rawValue)
+            if let existedName = name {
+                let cut = existedName.prefix(property.rawValue)
+                return paddedWithLimit(cut, property.rawValue)
+            }
         case .count:
-            let cut = String(count).prefix(property.rawValue)
-            return paddedWithLimit(cut, property.rawValue)
+            if let existedCount = count {
+                let cut = String(existedCount).prefix(property.rawValue)
+                return paddedWithLimit(cut, property.rawValue)
+            }
         case .sum:
-            let formattedString = String(format: "%.2f", sum)
-            let finalString = formattedString.hasSuffix(".00") ? formattedString : formattedString + ".00"
-            let cut = finalString.prefix(property.rawValue)
-            return paddedWithLimit(cut, property.rawValue)
+            if let existedSum = sum {
+                let formattedString = String(format: "%.2f", existedSum)
+                let finalString = formattedString.hasSuffix(".00") ? formattedString : formattedString + ".00"
+                let cut = finalString.prefix(property.rawValue)
+                return paddedWithLimit(cut, property.rawValue)
+            }
         }
+        return ""
     }
     
     private func paddedWithLimit(_ string: String.SubSequence, _ limit: Int) -> String {
@@ -118,5 +126,5 @@ extension TableBody {
 // MARK: - TableFooter
 
 struct TableFooter: Decodable {
-    let total: String
+    let total: String?
 }
