@@ -168,16 +168,9 @@ private extension Printer {
         let shift: Int = 20
         
         let toPayName = "К оплате".padPrefix(shift)
-        let toPayValue =  model.data.tableFooter.topayment.padPrefix(shift).replacingOccurrences(of: "₽", with: "Р")
+        let toPayValue =  model.data.tableFooter.total.padPrefix(shift).replacingOccurrences(of: "₽", with: "Р")
         let toPay = toPayName + toPayValue
         writeData_insert(toPay, bold: true, nextLine: true)
-        for paymentItem in model.data.tableFooter.payment {
-            let title = paymentItem.title.padPrefix(shift)
-            let value = paymentItem.value.padPrefix(shift).replacingOccurrences(of: "₽", with: "Р")
-            print(value)
-            writeData_insert(title, bold: false, nextLine: false)
-            writeData_insert(value, bold: true, nextLine: true)
-        }
     }
     
     func recieptPrepareAdditional(_ model: CheckModel) {

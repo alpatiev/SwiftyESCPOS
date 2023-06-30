@@ -78,7 +78,6 @@ struct Header: Codable {
 struct TableBody: Decodable {
     let name: String
     let count: Int
-    let price: Double
     let sum: Double
 }
 
@@ -119,12 +118,5 @@ extension TableBody {
 // MARK: - TableFooter
 
 struct TableFooter: Decodable {
-    let total, topayment: String
-    let payment: [Payment]
-}
-
-// MARK: - Payment
-
-struct Payment: Decodable {
-    let title, value: String
+    let total: String
 }
