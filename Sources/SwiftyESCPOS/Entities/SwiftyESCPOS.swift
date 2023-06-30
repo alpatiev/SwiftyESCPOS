@@ -123,7 +123,7 @@ public final class SwiftyESCPOS: NSObject {
     private func uniqueConnection(_ connectionModel: PrinterConnectionModel, _ completion: @escaping (Bool) -> Void) {
         DispatchQueue.main.async { [weak self] in
             guard let pointer = self else { completion(false); return }
-            let flag = pointer.printersModels.contains(where: { (connectionModel.host == $0.host) && (connectionModel.port == $0.port) })
+            let flag = pointer.printersModels.contains(where: { SwiftyESCPOS.equal(lhs: $0, rhs: connectionModel) })
             completion(!flag)
         }
     }
@@ -138,7 +138,7 @@ public final class SwiftyESCPOS: NSObject {
     
     private func selectPrinter(_ connectionModel: PrinterConnectionModel, _ completion: @escaping (Printer?) -> Void) {
         DispatchQueue.main.async { [weak self] in
-            let result = self?.printerManagedObjects.first(where: { $0.model.id == connectionModel.id })
+            let result = self?.printerManagedObjects.first(where: { SwiftyESCPOS.equal(lhs: $0.model, rhs: connectionModel) })
             completion(result)
         }
     }
@@ -147,7 +147,7 @@ public final class SwiftyESCPOS: NSObject {
     // MARK: - Update and sync connection models to delegate
     
     private func updateConnectionModels(with printer: Printer) {
-        guard let index = printersModels.firstIndex(where: { $0.id == printer.model.id }) else { return }
+        guard let index = printersModels.firstIndex(where: { SwiftyESCPOS.equal(lhs: $0, rhs: printer.model) }) else { return }
         printersModels[index] = printer.model
         updateListAndNotifyDelegate()
     }
@@ -170,5 +170,11 @@ extension SwiftyESCPOS: PrinterDelegate {
     
     func disconnected(from printer: Printer) {
         updateConnectionModels(with: printer)
+    }
+}
+
+extension SwiftyESCPOS {
+    static func equal(lhs: PrinterConnectionModel, rhs: PrinterConnectionModel) -> Bool {
+        (lhs.host == rhs.host) && (lhs.port == rhs.port)
     }
 }
