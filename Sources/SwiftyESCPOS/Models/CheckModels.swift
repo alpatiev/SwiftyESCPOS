@@ -6,6 +6,14 @@ public struct CheckModel: Decodable {
     public let success: Bool?
     public let data: DataClass?
     public let checkoutShift: CheckoutShift?
+    
+    public init(success: Bool?,
+                data: DataClass?,
+                checkoutShift: CheckoutShift?) {
+        self.success = success
+        self.data = data
+        self.checkoutShift = checkoutShift
+    }
 }
 
 // MARK: - CheckoutShift
@@ -18,6 +26,21 @@ public struct CheckoutShift: Decodable {
     public let checkoutShiftOpen: String?
     public let subdivisionsWithScheme: Int?
     public let subdivisionsWithSchemeBool: Bool?
+    
+    public init(status: Int?, statusBool: Bool?,
+                idcheckoutshift: Int?,
+                checkoutShiftNumber: Int?,
+                checkoutShiftOpen: String?,
+                subdivisionsWithScheme: Int?,
+                subdivisionsWithSchemeBool: Bool?) {
+        self.status = status
+        self.statusBool = statusBool
+        self.idcheckoutshift = idcheckoutshift
+        self.checkoutShiftNumber = checkoutShiftNumber
+        self.checkoutShiftOpen = checkoutShiftOpen
+        self.subdivisionsWithScheme = subdivisionsWithScheme
+        self.subdivisionsWithSchemeBool = subdivisionsWithSchemeBool
+    }
 }
 
 // MARK: - DataClass
@@ -28,6 +51,18 @@ public struct DataClass: Decodable {
     public let tableBody: [TableBody]?
     public let tableFooter: TableFooter?
     public let footer: [String]?
+    
+    public init(header: Header?,
+                body: [Body]?,
+                tableBody: [TableBody]?,
+                tableFooter: TableFooter?,
+                footer: [String]?) {
+        self.header = header
+        self.body = body
+        self.tableBody = tableBody
+        self.tableFooter = tableFooter
+        self.footer = footer
+    }
 }
 
 // MARK: - Decodable
@@ -36,6 +71,14 @@ public struct Header: Decodable {
     public let logo: String?
     public let title: String?
     public let subtitle: [String]?
+    
+    public init(logo: String?,
+                title: String?,
+                subtitle: [String]?) {
+        self.logo = logo
+        self.title = title
+        self.subtitle = subtitle
+    }
 }
 
 // MARK: - Body
@@ -43,6 +86,12 @@ public struct Header: Decodable {
 public struct Body: Decodable {
     public let title: String?
     public let value: Value?
+    
+    public init(title: String?,
+                value: Value?) {
+        self.title = title
+        self.value = value
+    }
 }
 
 public enum Value: Decodable {
@@ -80,6 +129,14 @@ public struct TableBody: Decodable {
     public let name: String?
     public let count: Int?
     public let sum: Double?
+    
+    public init(name: String?,
+                count: Int?,
+                sum: Double?) {
+        self.name = name
+        self.count = count
+        self.sum = sum
+    }
 }
 
 // MARK: - Check boody (products) aligment
@@ -127,4 +184,8 @@ extension TableBody {
 
 public struct TableFooter: Decodable {
     public let total: String?
+    
+    public init(total: String?) {
+        self.total = total
+    }
 }
