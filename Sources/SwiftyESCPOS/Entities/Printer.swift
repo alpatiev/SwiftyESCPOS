@@ -71,32 +71,32 @@ final class Printer: NSObject {
         recieptPrepareHeader(model)
         let header = reciept.getLatestData()
         reciept.refreshReciept()
-        writeReciept(with: 0.1, nsData: config)
+        writeReciept(with: 0.1, nsData: header)
         
         recieptPrepareBody(model)
         let body = reciept.getLatestData()
         reciept.refreshReciept()
-        writeReciept(with: 0.2, nsData: config)
+        writeReciept(with: 0.2, nsData: body)
         
         recieptPrepareProducts(model)
         let products = reciept.getLatestData()
         reciept.refreshReciept()
-        writeReciept(with: 0.3, nsData: config)
+        writeReciept(with: 0.3, nsData: products)
         
         recieptPrepareBottom(model)
         let bottom = reciept.getLatestData()
         reciept.refreshReciept()
-        writeReciept(with: 0.4, nsData: config)
+        writeReciept(with: 0.4, nsData: bottom)
         
         recieptPrepareAdditional(model)
         let additional = reciept.getLatestData()
         reciept.refreshReciept()
-        writeReciept(with: 0.5, nsData: config)
+        writeReciept(with: 0.5, nsData: additional)
         
         recieptPrepareCutPaper()
         let cutPaper = reciept.getLatestData()
         reciept.refreshReciept()
-        writeReciept(with: 0.6, nsData: config, isPreviousWorkFinished: true)
+        writeReciept(with: 0.6, nsData: cutPaper, isPreviousWorkFinished: true)
     }
     
     // MARK: - Initialize and configure
