@@ -2,54 +2,54 @@ import Foundation
 
 // MARK: - CheckModel
 
-struct CheckModel: Decodable {
-    let success: Bool?
-    let data: DataClass?
-    let checkoutShift: CheckoutShift?
+public struct CheckModel: Decodable {
+    public let success: Bool?
+    public let data: DataClass?
+    public let checkoutShift: CheckoutShift?
 }
 
 // MARK: - CheckoutShift
 
-struct CheckoutShift: Decodable {
-    let status: Int?
-    let statusBool: Bool?
-    let idcheckoutshift: Int?
-    let checkoutShiftNumber: Int?
-    let checkoutShiftOpen: String?
-    let subdivisionsWithScheme: Int?
-    let subdivisionsWithSchemeBool: Bool?
+public struct CheckoutShift: Decodable {
+    public let status: Int?
+    public let statusBool: Bool?
+    public let idcheckoutshift: Int?
+    public let checkoutShiftNumber: Int?
+    public let checkoutShiftOpen: String?
+    public let subdivisionsWithScheme: Int?
+    public let subdivisionsWithSchemeBool: Bool?
 }
 
 // MARK: - DataClass
 
-struct DataClass: Decodable {
-    let header: Header?
-    let body: [Body]?
-    let tableBody: [TableBody]?
-    let tableFooter: TableFooter?
-    let footer: [String]?
+public struct DataClass: Decodable {
+    public let header: Header?
+    public let body: [Body]?
+    public let tableBody: [TableBody]?
+    public let tableFooter: TableFooter?
+    public let footer: [String]?
 }
 
 // MARK: - Decodable
 
-struct Header: Decodable {
-    let logo: String?
-    let title: String?
-    let subtitle: [String]?
+public struct Header: Decodable {
+    public let logo: String?
+    public let title: String?
+    public let subtitle: [String]?
 }
 
 // MARK: - Body
 
-struct Body: Decodable {
-    let title: String?
-    let value: Value?
+public struct Body: Decodable {
+    public let title: String?
+    public let value: Value?
 }
 
-enum Value: Decodable {
+public enum Value: Decodable {
     case integer(Int)
     case string(String)
 
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         if let x = try? container.decode(Int.self) {
             self = .integer(x)
@@ -64,7 +64,7 @@ enum Value: Decodable {
                                                                            debugDescription: "Wrong type for Value"))
     }
     
-    var stringValue: String {
+    public var stringValue: String {
         switch self {
         case .integer(let intValue):
             return String(intValue)
@@ -76,10 +76,10 @@ enum Value: Decodable {
 
 // MARK: - TableBody
 
-struct TableBody: Decodable {
-    let name: String?
-    let count: Int?
-    let sum: Double?
+public struct TableBody: Decodable {
+    public let name: String?
+    public let count: Int?
+    public let sum: Double?
 }
 
 // MARK: - Check boody (products) aligment
@@ -125,6 +125,6 @@ extension TableBody {
 
 // MARK: - TableFooter
 
-struct TableFooter: Decodable {
-    let total: String?
+public struct TableFooter: Decodable {
+    public let total: String?
 }

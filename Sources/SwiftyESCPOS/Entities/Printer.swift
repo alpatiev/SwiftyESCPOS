@@ -60,6 +60,7 @@ final class Printer: NSObject {
     }
     
     func sendToPrinter(_ model: CheckModel) {
+        guard self.model.state == .connected else { return }
         recieptInitializePrinting()
         recieptSetRussainCompatibility()
         recieptPrepareHeader(model)

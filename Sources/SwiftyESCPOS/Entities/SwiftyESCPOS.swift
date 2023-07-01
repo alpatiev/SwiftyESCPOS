@@ -118,6 +118,19 @@ public final class SwiftyESCPOS: NSObject {
         }
     }
     
+    public func printCheck(with selection: PrinterSelection, from model: CheckModel) {
+        switch selection {
+        case .all:
+            selectAllPrinters { printer in
+                printer?.sendToPrinter(model)
+            }
+        case .selected(let printerConnectionModel):
+            selectPrinter(printerConnectionModel) { printer in
+                printer?.sendToPrinter(model)
+            }
+        }
+    }
+    
     // MARK: - Check if the same connection already exist
     
     private func uniqueConnection(_ connectionModel: PrinterConnectionModel, _ completion: @escaping (Bool) -> Void) {
