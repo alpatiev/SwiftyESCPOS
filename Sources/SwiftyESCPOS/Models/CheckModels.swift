@@ -129,13 +129,16 @@ public struct TableBody: Decodable {
     public let name: String?
     public let count: Int?
     public let sum: Double?
+    public var opaque: Bool? = false
     
     public init(name: String?,
                 count: Int?,
-                sum: Double?) {
+                sum: Double?,
+                opaque: Bool?) {
         self.name = name
         self.count = count
         self.sum = sum
+        self.opaque = opaque
     }
 }
 

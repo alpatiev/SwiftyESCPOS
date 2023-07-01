@@ -171,20 +171,20 @@ private extension Printer {
         writeData_insert(" ", bold: false, nextLine: true)
         
         let title = "Наименование".pad(.name) + " " + "Кол-во".pad(.count) + " " + "Сумма".pad(.sum)
-        var lines = [String]()
+        writeData_bold_item(title)
         
         if let existedTableBody = model.data?.tableBody {
             for element in existedTableBody {
+                guard let opaque = element.opaque else { return }
                 let name = element.limitedString(.name)
                 let count = Printer.centeredSixDigitsFrom(element.count ?? 0)
                 let sum = element.limitedString(.sum)
-                lines.append("\(name) \(count) \(sum)")
+                let line = "\(name) \(count) \(sum)"
+                
+                writeData_insert(line, bold: !opaque, nextLine: true)
             }
         }
        
-        
-        writeData_bold_item(title)
-        writeData_item(items: lines)
         writeData_insert(" ", bold: false, nextLine: true)
         writeCenterLine()
         writeData_insert(" ", bold: false, nextLine: true)
@@ -265,6 +265,7 @@ private extension Printer {
     func writeData_insert(_ text: String, bold: Bool, nextLine: Bool) {
         reciept.printBoldCharModel(model: bold ? 1 : 0)
         reciept.printCharSize(scale: kCharScale.scale_1)
+        reciept.printAlignmentType(type: .LeftAlignment) // ?? added after success reciepts. Maybe wrong command
         reciept.printAddTextRU(text: text)
         reciept.printBoldCharModel(model: 0)
         
