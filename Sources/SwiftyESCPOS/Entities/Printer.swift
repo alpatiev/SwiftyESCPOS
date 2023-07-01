@@ -175,7 +175,7 @@ private extension Printer {
         
         if let existedTableBody = model.data?.tableBody {
             for element in existedTableBody {
-                guard let opaque = element.opaque else { return }
+                let opaque = element.opaque ?? false
                 let name = element.limitedString(.name)
                 let count = Printer.centeredSixDigitsFrom(element.count ?? 0)
                 let sum = element.limitedString(.sum)
