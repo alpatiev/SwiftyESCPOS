@@ -19,6 +19,7 @@ final class Printer: NSObject {
     private let reciept = Reciept()
     private var configuration: PrinterConfiguration
     private var language: PrinterLanguage
+    private var isPreviousWorkfinished = true
     private var shouldEstabilishConnection = false
     private lazy var socket: GCDAsyncSocket = {
         let socket = GCDAsyncSocket()
@@ -60,17 +61,42 @@ final class Printer: NSObject {
     }
     
     func sendToPrinter(_ model: CheckModel) {
-        guard self.model.state == .connected else { return }
+        guard self.model.state == .connected, isPreviousWorkfinished else { return }
         recieptInitializePrinting()
         recieptSetRussainCompatibility()
-        recieptPrepareHeader(model)
-        recieptPrepareBody(model)
-        recieptPrepareProducts(model)
-        recieptPrepareBottom(model)
-        recieptPrepareAdditional(model)
-        recieptPrepareCutPaper()
-        socket.write(reciept.getLatestData() as Data, withTimeout: -1, tag: 0)
+        let config = reciept.getLatestData()
         reciept.refreshReciept()
+        writeReciept(with: 0, nsData: config)
+                
+        recieptPrepareHeader(model)
+        let header = reciept.getLatestData()
+        reciept.refreshReciept()
+        writeReciept(with: 0.1, nsData: config)
+        
+        recieptPrepareBody(model)
+        let body = reciept.getLatestData()
+        reciept.refreshReciept()
+        writeReciept(with: 0.2, nsData: config)
+        
+        recieptPrepareProducts(model)
+        let products = reciept.getLatestData()
+        reciept.refreshReciept()
+        writeReciept(with: 0.3, nsData: config)
+        
+        recieptPrepareBottom(model)
+        let bottom = reciept.getLatestData()
+        reciept.refreshReciept()
+        writeReciept(with: 0.4, nsData: config)
+        
+        recieptPrepareAdditional(model)
+        let additional = reciept.getLatestData()
+        reciept.refreshReciept()
+        writeReciept(with: 0.5, nsData: config)
+        
+        recieptPrepareCutPaper()
+        let cutPaper = reciept.getLatestData()
+        reciept.refreshReciept()
+        writeReciept(with: 0.6, nsData: config, isPreviousWorkFinished: true)
     }
     
     // MARK: - Initialize and configure
@@ -93,6 +119,13 @@ final class Printer: NSObject {
         switch language {
         case .russian:
             reciept.printSetupRussianCompatibility()
+        }
+    }
+    
+    private func writeReciept(with timeout: Double, nsData: NSMutableData, isPreviousWorkFinished: Bool = false) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + timeout) { [weak self] in
+            self?.socket.write(nsData as Data, withTimeout: -1, tag: 0)
+            self?.isPreviousWorkfinished = isPreviousWorkFinished
         }
     }
 }
