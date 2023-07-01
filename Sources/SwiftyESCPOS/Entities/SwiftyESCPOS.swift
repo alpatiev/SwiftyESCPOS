@@ -59,7 +59,7 @@ public final class SwiftyESCPOS: NSObject {
                         self?.printerManagedObjects.remove(printerObject)
                     }
                     
-                    if let index = self?.printersModels.firstIndex(where: { $0.id == printerConnectionModel.id }) {
+                    if let index = self?.printersModels.firstIndex(where: { SwiftyESCPOS.equal(lhs: $0, rhs: printerConnectionModel)}) {
                         self?.printersModels.remove(at: index)
                     }
                     
