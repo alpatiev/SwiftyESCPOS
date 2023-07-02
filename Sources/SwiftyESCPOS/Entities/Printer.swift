@@ -65,7 +65,6 @@ final class Printer: NSObject {
         recieptInitializePrinting()
         recieptSetRussainCompatibility()
         let config = reciept.getLatestData() as Data
-        reciept.refreshReciept()
         writeReciept(with: 0, data: config, tag: 1)
                 
         recieptPrepareHeader(model)
@@ -168,7 +167,7 @@ private extension Printer {
     func recieptPrepareHeader(_ model: CheckModel) {
         if let existedTitle = model.data?.header?.title {
             let cutHeaderName = String(existedTitle.prefix(40))
-           // writeData_Title(title: "", scale: .scale_1, bold: true)
+            writeData_Title(title: "", scale: .scale_1, bold: true)
             writeData_Title(title: cutHeaderName, scale: .scale_1, bold: true)
         }
       
