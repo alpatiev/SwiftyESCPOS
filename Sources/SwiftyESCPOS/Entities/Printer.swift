@@ -166,11 +166,11 @@ private extension Printer {
     
     func recieptPrepareHeader(_ model: CheckModel) {
         reciept.printInitialize()
-        reciept.printAddTextRU(text: "")
+        writeData_item(items: [""])
         
         if let existedTitle = model.data?.header?.title {
             let cutHeaderName = String(existedTitle.prefix(40))
-            //writeData_Title(title: "", scale: .scale_1, bold: true)
+            writeData_Title(title: "", scale: .scale_1, bold: true)
             writeData_Title(title: cutHeaderName, scale: .scale_1, bold: true)
         }
       
