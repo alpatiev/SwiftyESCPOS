@@ -165,9 +165,12 @@ private extension Printer {
     // MARK: - Create sequence of bytes which prints check divided by areas
     
     func recieptPrepareHeader(_ model: CheckModel) {
+        reciept.printInitialize()
+        reciept.printAddTextRU(text: "")
+        
         if let existedTitle = model.data?.header?.title {
             let cutHeaderName = String(existedTitle.prefix(40))
-            writeData_Title(title: "", scale: .scale_1, bold: true)
+            //writeData_Title(title: "", scale: .scale_1, bold: true)
             writeData_Title(title: cutHeaderName, scale: .scale_1, bold: true)
         }
       
@@ -229,7 +232,7 @@ private extension Printer {
         
         guard let totalValue = model.data?.tableFooter?.total else { return }
         let toPayName = "К оплате".padPrefix(shift)
-        let toPayValue = totalValue.padPrefix(shift).replacingOccurrences(of: "₽", with: "Р")
+        let toPayValue = totalValue.padPrefix(shift).replacingOccurrences(of: "₽", with: "")
         let toPay = toPayName + toPayValue
         writeData_insert(toPay, bold: true, nextLine: true, charSize: .scale_2)
         writeSetCharSize(.scale_1)
