@@ -139,6 +139,10 @@ public final class SwiftyESCPOS: NSObject {
         scanner.pingHost(host)
     }
     
+    public func requestDevicesUpdates() {
+        updateListAndNotifyDelegate()
+    }
+    
     // MARK: - Check if the same connection already exist
     
     private func uniqueConnection(_ connectionModel: PrinterConnectionModel, _ completion: @escaping (Bool) -> Void) {
