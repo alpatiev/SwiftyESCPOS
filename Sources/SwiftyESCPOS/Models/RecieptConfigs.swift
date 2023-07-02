@@ -29,7 +29,7 @@ enum kPrintOrientation: UInt8 {
 
 enum kCharScale: UInt8 {
     case scale_1 = 0
-    case scale_2 = 4
+    case scale_2 = 1
     case scale_3 = 34
     case scale_4 = 51
     case scale_5 = 68
