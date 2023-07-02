@@ -23,7 +23,7 @@ final class PingDevice: NSObject {
         return socket
     }()
     
-    init(host: String, port: UInt16, wait: TimeInterval = 0.2) {
+    init(host: String, port: UInt16, wait: TimeInterval = 1) {
         self.host = host
         self.port = port
         self.wait = wait
