@@ -136,7 +136,7 @@ public final class SwiftyESCPOS: NSObject {
     }
     
     public func pingPortsForHost(host: String) {
-        
+        scanner.pingHost(host)
     }
     
     // MARK: - Check if the same connection already exist
