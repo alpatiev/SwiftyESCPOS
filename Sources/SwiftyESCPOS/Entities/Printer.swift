@@ -168,7 +168,7 @@ private extension Printer {
     func recieptPrepareHeader(_ model: CheckModel) {
         if let existedTitle = model.data?.header?.title {
             let cutHeaderName = String(existedTitle.prefix(40))
-            writeData_Title(title: "", scale: .scale_1, bold: true)
+           // writeData_Title(title: "", scale: .scale_1, bold: true)
             writeData_Title(title: cutHeaderName, scale: .scale_1, bold: true)
         }
       
@@ -215,7 +215,7 @@ private extension Printer {
                 let sum = element.limitedString(.sum)
                 let line = "\(name) \(count) \(sum)"
                 
-                writeData_insert(line, bold: !opaque, nextLine: true)
+                writeData_insert(line, bold: false, nextLine: true)
             }
         }
        
@@ -232,7 +232,8 @@ private extension Printer {
         let toPayName = "К оплате".padPrefix(shift)
         let toPayValue = totalValue.padPrefix(shift).replacingOccurrences(of: "₽", with: "Р")
         let toPay = toPayName + toPayValue
-        writeData_insert(toPay, bold: true, nextLine: true)
+        writeData_insert(toPay, bold: true, nextLine: true, charSize: .scale_2)
+        writeSetCharSize(.scale_1)
     }
     
     func recieptPrepareAdditional(_ model: CheckModel) {
@@ -296,9 +297,9 @@ private extension Printer {
         writeData_Title(title: "----------------------------------------", scale: .scale_1)
     }
     
-    func writeData_insert(_ text: String, bold: Bool, nextLine: Bool) {
+    func writeData_insert(_ text: String, bold: Bool, nextLine: Bool, charSize: kCharScale = .scale_1) {
         reciept.printBoldCharModel(model: bold ? 1 : 0)
-        reciept.printCharSize(scale: kCharScale.scale_1)
+        reciept.printCharSize(scale: charSize)
         reciept.printAlignmentType(type: .LeftAlignment) // ?? added after success reciepts. Maybe wrong command
         reciept.printAddTextRU(text: text)
         reciept.printBoldCharModel(model: 0)
@@ -312,5 +313,9 @@ private extension Printer {
         writeData_line()
         writeData_item(items: [string])
         writeData_line()
+    }
+    
+    func writeSetCharSize(_ size: kCharScale) {
+        reciept.printCharSize(scale: size)
     }
 }
