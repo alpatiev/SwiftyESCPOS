@@ -4,8 +4,8 @@ import CocoaAsyncSocket
 
 public protocol SwiftyESCPOSDelegate: AnyObject {
     func devices(didUpdatePrinters models: [PrinterConnectionModel])
+    func devices(didFindOpentPorts model: PrinterConnectionModel)
 }
-
 // MARK: - Main printer manager
 
 public final class SwiftyESCPOS: NSObject {
@@ -13,13 +13,17 @@ public final class SwiftyESCPOS: NSObject {
     // MARK: - Properties
     
     public weak var delegate: SwiftyESCPOSDelegate?
+    private let scanner = NetworkScanner()
     private let reciept = Reciept()
     private var printersModels = [PrinterConnectionModel]()
     private var printerManagedObjects = Set<Printer>()
     
     // MARK: - Lifecycle
     
-    public override init() {}
+    public override init() {
+        super.init()
+        scanner.delegate = self
+    }
     
     // MARK: - Public methods
     
@@ -131,6 +135,10 @@ public final class SwiftyESCPOS: NSObject {
         }
     }
     
+    public func pingPortsForHost(host: String) {
+        
+    }
+    
     // MARK: - Check if the same connection already exist
     
     private func uniqueConnection(_ connectionModel: PrinterConnectionModel, _ completion: @escaping (Bool) -> Void) {
@@ -186,8 +194,18 @@ extension SwiftyESCPOS: PrinterDelegate {
     }
 }
 
+// MARK: - Compare
+
 extension SwiftyESCPOS {
     static func equal(lhs: PrinterConnectionModel, rhs: PrinterConnectionModel) -> Bool {
         (lhs.host == rhs.host) && (lhs.port == rhs.port)
+    }
+}
+
+// MARK: - Netowrk scanner delegate
+
+extension SwiftyESCPOS: NetworkScannerDelegate {
+    public func devices(didFindOpenPorts model: PrinterConnectionModel) {
+        delegate?.devices(didFindOpentPorts: model)
     }
 }
