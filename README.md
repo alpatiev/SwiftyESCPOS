@@ -17,7 +17,7 @@ The class includes a delegate protocol, SwiftyESCPOSDelegate, which provides two
 
 You can use Swift Package Manager to install SwiftyESCPOS into your project. Simply add the following dependency to your Package.swift
  
-```
+```swift
 dependencies: [
     .package(url: "https://github.com/example/SwiftyESCPOS.git", from: "1.0.0")
 ]
