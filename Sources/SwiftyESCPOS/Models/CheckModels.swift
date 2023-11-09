@@ -4,7 +4,7 @@ import Foundation
 
 public struct CheckModel: Decodable {
     public let success: Bool?
-    public let data: DataClass?
+    public var data: DataClass?
     public let checkoutShift: CheckoutShift?
     
     public init(success: Bool?,
@@ -49,7 +49,7 @@ public struct DataClass: Decodable {
     public let header: Header?
     public let body: [Body]?
     public let tableBody: [TableBody]?
-    public let tableFooter: TableFooter?
+    public var tableFooter: TableFooter?
     public let footer: [String]?
     
     public init(header: Header?,
@@ -186,7 +186,7 @@ extension TableBody {
 // MARK: - TableFooter
 
 public struct TableFooter: Decodable {
-    public let total: String?
+    public var total: String?
     
     public init(total: String?) {
         self.total = total

@@ -104,9 +104,14 @@ public final class SwiftyESCPOS: NSObject {
         }
     }
     
-    public func printCheck(with selection: PrinterSelection, from data: Data) {
+    public func printCheck(with selection: PrinterSelection,
+                           from data: Data,
+                           sumWithDiscount: Int? = nil) {
         do {
-            let model = try JSONDecoder().decode(CheckModel.self, from: data)
+            var model = try JSONDecoder().decode(CheckModel.self, from: data)
+            if let sumWithCorrection = sumWithDiscount {
+                model.data?.tableFooter?.total = String(sumWithCorrection)
+            }
             switch selection {
             case .all:
                 selectAllPrinters { printer in
