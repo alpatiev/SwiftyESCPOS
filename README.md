@@ -23,4 +23,83 @@ dependencies: [
 ]
 ```
 
+# Usage
 
+## 1. First thing first, you need to declare printer class somewhere (and scanner, which is optional), for example within our virtual OurViewModel:
+```swift
+final class OurViewModel {
+    private lazy var scanner = LanScanner(delegate: self)
+    private lazy var printer: SwiftyESCPOS
+}
+```
+
+## 2. The next step is to configure delegates and confirm our class to protocols:
+```swift
+init(printer: SwiftyESCPOS)
+    self.printer = printer
+    printer.delegate = self
+}
+```
+
+These are necessary SwiftyESCPOSDelegate methods.
+```swift
+extension OurViewModel: SwiftyESCPOSDelegate {
+    func devices(didUpdatePrinters models: [PrinterConnectionModel]) {
+      // Do something if you want to show printers state,
+      // or just observe when one of printers disconnects.
+    }
+    
+    func devices(didFindOpentPorts model: PrinterConnectionModel) {
+      // Do something if you decide to connect new printer.
+      // This functions returns PrinterConnectionModel of printer
+      // if one of the devices is available for connection.
+      // There should be logic for processing the connection, you should choose this yourself -
+      // either show the user a confirmation window, or connect automatically.
+    }
+}
+```
+
+Well, here are the methods for the scanner. Don't forget, this is optional and you can use any other library to search for devices, or even implement the search manually (and pass a string with the address to the "pingPortsForHost(host: String)" method). Don't forget call scanner.start().
+```swift
+extension OurViewModel: LanScannerDelegate {
+    func lanScanHasUpdatedProgress(_ progress: CGFloat, address: String) {
+       // Show the user progress of scanning.
+    }
+
+    func lanScanDidFindNewDevice(_ device: LanDevice) {
+       // Here are new devices if found.
+       // For example, you can pass it directly to the printer:
+       printerService.pingPortsForHost(host: String(device.ipAddress.formatted()))
+    }
+
+    func lanScanDidFinishScanning() {
+        // Notifies when scanning has been finished.
+    }
+}
+```
+
+## 3. And the last step is working directly to the printers.
+The essential model for this library is PrinterConnectionModel.
+You need to pass it if you want to connect device, or print something.
+
+For example, let's save and connect this model:
+```swift
+let device = PrinterConnectionModel(host: "192.168.0.1", port: "8100")
+printer.create(new: device)
+printer.connect(with: .selected(device))
+```
+
+And print some check:
+```swift
+let check = CheckModel(success: <#T##Bool?#>, data: <#T##DataClass?#>, checkoutShift: <#T##CheckoutShift?#>)
+printer.printCheck(with: .selected(device), from: check)
+```
+
+Overall, we need to disconnect device in some point:
+```swift
+printer.disconnect(with: .selected(device))
+```
+Or even simple:
+```swift
+printer.disconnect(with: .all))
+```
