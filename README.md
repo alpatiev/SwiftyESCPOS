@@ -91,15 +91,32 @@ printer.connect(with: .selected(device))
 
 And print some check:
 ```swift
-let check = CheckModel(success: <#T##Bool?#>, data: <#T##DataClass?#>, checkoutShift: <#T##CheckoutShift?#>)
+let check = CheckModel(success: Bool?, data: DataClass?, checkoutShift: CheckoutShift?)
 printer.printCheck(with: .selected(device), from: check)
 ```
 
-Overall, we need to disconnect device in some point:
+If we need to disconnect device in some point:
 ```swift
 printer.disconnect(with: .selected(device))
 ```
 Or even simple:
 ```swift
 printer.disconnect(with: .all))
+```
+
+## * Additional info on check structure.
+```swift
+public struct CheckModel: Decodable {
+    public let success: Bool? // Just leave it "true".
+    public var data: DataClass? // Contains all check positions, headers, footers, etc.
+    public let checkoutShift: CheckoutShift? // Optional.
+}
+```
+```swift
+public struct DataClass: Decodable {
+    public let header: Header? // Obviously, top titles.
+    public let body: [Body]? // Some lines about restaraunt, discounts, greetings..
+    public let tableBody: [TableBody]? // Each element describe order's position. Name, count and sum.
+    public var tableFooter: TableFooter? // Use property ".total" to show overall sum.
+    public let footer: [String]? // Some additional small text.
 ```
