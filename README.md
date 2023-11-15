@@ -69,7 +69,7 @@ extension OurViewModel: LanScannerDelegate {
     func lanScanDidFindNewDevice(_ device: LanDevice) {
        // Here are new devices if found.
        // For example, you can pass it directly to the printer:
-       printerService.pingPortsForHost(host: String(device.ipAddress.formatted()))
+       printer.pingPortsForHost(host: String(device.ipAddress.formatted()))
     }
 
     func lanScanDidFinishScanning() {
