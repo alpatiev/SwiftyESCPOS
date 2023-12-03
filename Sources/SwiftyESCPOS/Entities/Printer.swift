@@ -243,7 +243,7 @@ private extension Printer {
             let discountValueString = discountValueWrapped.padPrefix(shift)
             let discountResultString = discountNameString + discountValueString
             print("> SwiftyESCPOS :" + discountResultString)
-            writeData_insert(discount, bold: true, nextLine: true, charSize: .scale_2)
+            writeData_insert(discountResultString, bold: true, nextLine: true, charSize: .scale_2)
             writeSetCharSize(.scale_1)
         }
         
