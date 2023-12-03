@@ -238,7 +238,7 @@ private extension Printer {
                 let removedPercentBuffer = discountValueRaw.replacingOccurrences(of: "%", with: " ")
                 let removedSpacesBuffer = removedPercentBuffer.replacingOccurrences(of: " ", with: "")
                 if let discountDouble = Double(removedSpacesBuffer) {
-                    discountValueWrapped = String(Int(discountDouble))
+                    discountValueWrapped = String(Int(discountDouble)) + " %"
                 } else {
                     discountValueWrapped = discountValueRaw
                 }
@@ -248,7 +248,6 @@ private extension Printer {
             let discountNameString = "Скидка".padPrefix(shift)
             let discountValueString = discountValueWrapped.padPrefix(shift)
             let discountResultString = discountNameString + discountValueString
-            print(discountResultString)
             writeData_insert(discountResultString, bold: true, nextLine: true, charSize: .scale_2)
             writeSetCharSize(.scale_1)
         }
@@ -256,7 +255,6 @@ private extension Printer {
         let toPayNameString = "К оплате".padPrefix(shift)
         let toPayValueString = toPayValue.padPrefix(shift)
         let toPayResultString = toPayNameString + toPayValueString
-        print(toPayResultString)
         writeData_insert(toPayResultString, bold: true, nextLine: true, charSize: .scale_2)
         writeSetCharSize(.scale_1)
     }
