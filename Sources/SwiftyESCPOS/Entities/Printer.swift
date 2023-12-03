@@ -235,7 +235,7 @@ private extension Printer {
         if let discountValueRaw = model.data?.tableFooter?.discount {
             let discountValueWrapped: String
             if discountValueRaw.last == "%" {
-                discountValueWrapped = String(Int(discountValueRaw.replacingOccurrences(of: " ", with: "")) ?? 0)
+                discountValueWrapped = String(Int(discountValueRaw.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "%", with: "")) ?? 0)
             } else {
                 discountValueWrapped = discountValueRaw
             }
