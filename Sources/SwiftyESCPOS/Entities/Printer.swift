@@ -211,7 +211,7 @@ private extension Printer {
         
         if let existedTableBody = model.data?.tableBody {
             for element in existedTableBody {
-                let opaque = element.opaque ?? false
+                //let opaque = element.opaque ?? false
                 let name = element.limitedString(.name)
                 let count = Printer.centeredSixDigitsFrom(element.count ?? 0)
                 let sum = element.limitedString(.sum)
@@ -230,20 +230,28 @@ private extension Printer {
     func recieptPrepareBottom(_ model: CheckModel) {
         let shift: Int = 20
         
-        guard let totalValue = model.data?.tableFooter?.topayment else { return }
+        guard let toPayValue = model.data?.tableFooter?.topayment else { return }
         
-        if let discountValue = model.data?.tableFooter?.discount {
-            let discountName = "Скидка".padPrefix(shift)
-            let discountValue = discountValue.padPrefix(shift)
-            let discount = discountName + discountValue
+        if let discountValueRaw = model.data?.tableFooter?.discount {
+            let discountValueWrapped: String
+            if discountValueRaw.last == "%" {
+                discountValueWrapped = String(Int(discountValueRaw.replacingOccurrences(of: " ", with: "")) ?? 0)
+            } else {
+                discountValueWrapped = discountValueRaw
+            }
+            let discountNameString = "Скидка".padPrefix(shift)
+            let discountValueString = discountValueWrapped.padPrefix(shift)
+            let discountResultString = discountNameString + discountValueString
+            print("> SwiftyESCPOS :" + discountResultString)
             writeData_insert(discount, bold: true, nextLine: true, charSize: .scale_2)
             writeSetCharSize(.scale_1)
         }
         
-        let toPayName = "К оплате".padPrefix(shift)
-        let toPayValue = totalValue.padPrefix(shift)
-        let toPay = toPayName + toPayValue
-        writeData_insert(toPay, bold: true, nextLine: true, charSize: .scale_2)
+        let toPayNameString = "К оплате".padPrefix(shift)
+        let toPayValueString = toPayValue.padPrefix(shift)
+        let toPayResultString = toPayNameString + toPayValueString
+        print("> SwiftyESCPOS :" + toPayResultString)
+        writeData_insert(toPayResultString, bold: true, nextLine: true, charSize: .scale_2)
         writeSetCharSize(.scale_1)
     }
     
