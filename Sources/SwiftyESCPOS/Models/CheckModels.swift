@@ -186,9 +186,11 @@ extension TableBody {
 // MARK: - TableFooter
 
 public struct TableFooter: Decodable {
-    public var total: String?
+    public var discount: String?
+    public var topayment: String?
     
-    public init(total: String?) {
-        self.total = total
+    public init(discount: String? = nil, topayment: String? = nil) {
+        self.discount = discount
+        self.topayment = topayment
     }
 }

@@ -230,9 +230,18 @@ private extension Printer {
     func recieptPrepareBottom(_ model: CheckModel) {
         let shift: Int = 20
         
-        guard let totalValue = model.data?.tableFooter?.total else { return }
+        guard let totalValue = model.data?.tableFooter?.topayment else { return }
+        
+        if let discountValue = model.data?.tableFooter?.discount {
+            let discountName = "Скидка".padPrefix(shift)
+            let discountValue = discountValue.padPrefix(shift)
+            let discount = discountName + discountValue
+            writeData_insert(discount, bold: true, nextLine: true, charSize: .scale_2)
+            writeSetCharSize(.scale_1)
+        }
+        
         let toPayName = "К оплате".padPrefix(shift)
-        let toPayValue = totalValue.padPrefix(shift).replacingOccurrences(of: "₽", with: "")
+        let toPayValue = totalValue.padPrefix(shift)
         let toPay = toPayName + toPayValue
         writeData_insert(toPay, bold: true, nextLine: true, charSize: .scale_2)
         writeSetCharSize(.scale_1)
