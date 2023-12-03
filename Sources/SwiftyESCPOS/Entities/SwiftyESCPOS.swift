@@ -109,11 +109,13 @@ public final class SwiftyESCPOS: NSObject {
                            sumWithDiscount: Int? = nil) {
         do {
             var model = try JSONDecoder().decode(CheckModel.self, from: data)
-            print(model.data?.tableFooter ?? "* SwiftyESCPOS > NO TABLE FOOTER")
+            print("\n\n> DUMP BEFORE:\n\n")
+            dump(model)
             if let sumWithCorrection = sumWithDiscount {
                 model.data?.tableFooter?.total = String(sumWithCorrection)
             }
-            print(model.data?.tableFooter ?? "* SwiftyESCPOS > NO TABLE FOOTER")
+            print("\n\n> DUMP AFTER:\n\n")
+            dump(model)
             switch selection {
             case .all:
                 selectAllPrinters { printer in
