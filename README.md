@@ -119,4 +119,5 @@ public struct DataClass: Decodable {
     public let tableBody: [TableBody]? // Each element describe order's position. Name, count and sum.
     public var tableFooter: TableFooter? // Use property ".total" to show overall sum.
     public let footer: [String]? // Some additional small text.
+}
 ```
