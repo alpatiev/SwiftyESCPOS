@@ -104,7 +104,7 @@ Or even simple:
 printer.disconnect(with: .all))
 ```
 
-## * Additional info on check structure.
+## * Additional info on reciept structure.
 ```swift
 public struct CheckModel: Decodable {
     public let success: Bool? // Just leave it "true".
